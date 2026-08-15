@@ -1,3 +1,4 @@
+import IntakeSection from "../components/IntakeSection";
 import CTA from "../components/sections/cta/default";
 import FAQ from "../components/sections/faq/default";
 import Footer from "../components/sections/footer/default";
@@ -21,6 +22,7 @@ export default function Home() {
       <Pricing />
       <FAQ />
       <CTA />
+      <IntakeSection />
       <Footer />
     </main>
   );
