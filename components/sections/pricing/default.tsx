@@ -11,6 +11,7 @@ interface PricingProps {
   description?: string | false;
   plans?: PricingColumnProps[] | false;
   className?: string;
+  id?: string;
 }
 
 const DEFAULT_PRICING_PLANS: PricingColumnProps[] = [
@@ -74,9 +75,10 @@ export default function Pricing({
   description = "Get lifetime access to all the components. No recurring fees. Just simple, transparent pricing.",
   plans = DEFAULT_PRICING_PLANS,
   className = "",
+  id = "pricing",
 }: PricingProps) {
   return (
-    <Section className={cn(className)}>
+    <Section id={id} className={cn(className)}>
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-12">
         {(title || description) && (
           <div className="flex flex-col items-center gap-4 px-4 text-center sm:gap-8">

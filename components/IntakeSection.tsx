@@ -24,7 +24,6 @@ export default function IntakeSection() {
               src={TALLY_EMBED_URL}
               title="Project intake form"
               loading="lazy"
-              allowTransparency
               style={{
                 width: "100%",
                 minHeight: "920px",

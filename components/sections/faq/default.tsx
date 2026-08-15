@@ -21,6 +21,7 @@ interface FAQProps {
   title?: string;
   items?: FAQItemProps[] | false;
   className?: string;
+  id?: string;
 }
 
 export default function FAQ({
@@ -148,9 +149,10 @@ export default function FAQ({
     },
   ],
   className,
+  id = "faq",
 }: FAQProps) {
   return (
-    <Section className={className}>
+    <Section id={id} className={className}>
       <div className="max-w-container mx-auto flex flex-col items-center gap-8">
         <h2 className="text-center text-3xl font-semibold sm:text-5xl">
           {title}

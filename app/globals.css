@@ -5,6 +5,10 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme inline {
   /* Colors */
   --color-brand: var(--brand);

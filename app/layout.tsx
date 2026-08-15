@@ -1,11 +1,11 @@
 import "@/app/globals.css";
 
 import type { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
 
 import { inter } from "@/lib/fonts";
 
 import { siteConfig } from "../config/site";
+import { RootLayoutClient } from "./RootLayoutClient";
 
 export const metadata: Metadata = {
   title: {
@@ -72,14 +72,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className={`${inter.variable} bg-background font-sans antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <RootLayoutClient>{children}</RootLayoutClient>
       </body>
     </html>
   );

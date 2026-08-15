@@ -1,4 +1,3 @@
-import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 import Glow from "../../ui/glow";
@@ -17,7 +16,7 @@ interface CTAProps {
 
 const DEFAULT_CTA_BUTTONS: CTAButtonProps[] = [
   {
-    href: siteConfig.getStartedUrl,
+    href: "#intake",
     text: "Get Started",
     variant: "default",
   },

@@ -47,15 +47,16 @@ export default function Navbar({
   name = "Launch UI",
   homeUrl = siteConfig.url,
   mobileLinks = [
-    { text: "Getting Started", href: siteConfig.url },
-    { text: "Components", href: siteConfig.url },
-    { text: "Documentation", href: siteConfig.url },
+    { text: "Services", href: "/#services" },
+    { text: "Pricing", href: "/#pricing" },
+    { text: "FAQ", href: "/#faq" },
+    { text: "Contact", href: "/#intake" },
   ],
   actions = [
-    { text: "Sign in", href: siteConfig.url, isButton: false },
+    { text: "Sign In", href: "/signin", isButton: false },
     {
-      text: "Get Started",
-      href: siteConfig.url,
+      text: "Start a Project",
+      href: "/#intake",
       isButton: true,
       variant: "default",
     },
