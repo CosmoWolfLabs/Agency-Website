@@ -1,11 +1,7 @@
-import { ArrowRightIcon } from "lucide-react";
 import { ReactNode } from "react";
 
-import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
-import Github from "../../logos/github";
-import { Badge } from "../../ui/badge";
 import Glow from "../../ui/glow";
 import { LinkButton, type LinkButtonProps } from "../../ui/link-button";
 import { Mockup, MockupFrame } from "../../ui/mockup";
@@ -27,29 +23,16 @@ interface HeroProps {
 
 const DEFAULT_HERO_BUTTONS: HeroButtonProps[] = [
   {
-    href: siteConfig.getStartedUrl,
-    text: "Get Started",
+    href: "#intake",
+    text: "Start a Project",
     variant: "default",
   },
   {
-    href: siteConfig.links.github,
-    text: "GitHub",
+    href: "#services",
+    text: "View Services",
     variant: "glow",
-    icon: <Github className="mr-2 size-4" />,
   },
 ];
-
-const DEFAULT_HERO_BADGE = (
-  <Badge variant="outline" className="animate-appear">
-    <span className="text-muted-foreground">
-      New version of Launch UI is out!
-    </span>
-    <a href={siteConfig.getStartedUrl} className="flex items-center gap-1">
-      Get started
-      <ArrowRightIcon className="size-3" />
-    </a>
-  </Badge>
-);
 
 const DEFAULT_HERO_MOCKUP = (
   <Screenshot
@@ -64,15 +47,16 @@ const DEFAULT_HERO_MOCKUP = (
 );
 
 export default function Hero({
-  title = "Give your big idea the design it deserves",
-  description = "Professionally designed blocks and templates built with React, Shadcn/ui and Tailwind that will help your product stand out.",
+  title = "High-Performance Websites & Custom Automations",
+  description = "We build ultra-fast web platforms, custom 24/7 Discord & Telegram bots, and automated client pipelines designed to scale your operations.",
   mockup = DEFAULT_HERO_MOCKUP,
-  badge = DEFAULT_HERO_BADGE,
+  badge = false,
   buttons = DEFAULT_HERO_BUTTONS,
   className,
 }: HeroProps) {
   return (
     <Section
+      id="intake"
       className={cn(
         "fade-bottom overflow-hidden pb-0 sm:pb-0 md:pb-0",
         className,

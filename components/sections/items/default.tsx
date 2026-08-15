@@ -1,13 +1,4 @@
-import {
-  BlocksIcon,
-  EclipseIcon,
-  FastForwardIcon,
-  LanguagesIcon,
-  MonitorSmartphoneIcon,
-  RocketIcon,
-  ScanFaceIcon,
-  SquarePenIcon,
-} from "lucide-react";
+import { BlocksIcon, MonitorSmartphoneIcon, RocketIcon } from "lucide-react";
 import { ReactNode } from "react";
 
 import { Item, ItemDescription, ItemIcon, ItemTitle } from "../../ui/item";
@@ -27,67 +18,52 @@ interface ItemsProps {
 
 const DEFAULT_ITEMS: ItemProps[] = [
   {
-    title: "Accessibility first",
-    description: "Fully WCAG 2.0 compliant, made with best a11y practices",
-    icon: <ScanFaceIcon className="size-5 stroke-1" />,
-  },
-  {
-    title: "Responsive design",
-    description: "Looks and works great on any device and screen size",
+    title: "Modern Web Applications",
+    description:
+      "High-speed React & Next.js web applications, responsive UI/UX, fast Vercel hosting, and SEO optimization.",
     icon: <MonitorSmartphoneIcon className="size-5 stroke-1" />,
   },
   {
-    title: "Light and dark mode",
-    description: "Seamless switching between color schemes, 6 themes included",
-    icon: <EclipseIcon className="size-5 stroke-1" />,
-  },
-  {
-    title: "Easy to customize",
-    description: "Flexible options to match your product or brand",
+    title: "Discord & Telegram Bots",
+    description:
+      "Custom-built utility bots running 24/7 on Render, database-connected for notifications, moderation, and community automation.",
     icon: <BlocksIcon className="size-5 stroke-1" />,
   },
   {
-    title: "Top-level performance",
-    description: "Made for lightning-fast load times and smooth interactions",
-    icon: <FastForwardIcon className="size-5 stroke-1" />,
-  },
-  {
-    title: "Production ready",
-    description: "Thoroughly tested and launch-prepared",
+    title: "Automated Lead Pipelines",
+    description:
+      "Custom intake workflows using Tally.so forms and cloud databases (Appwrite) to capture and manage leads with zero monthly tool fees.",
     icon: <RocketIcon className="size-5 stroke-1" />,
-  },
-  {
-    title: "Made for localization",
-    description: "Easy to implement support for multiple languages and regions",
-    icon: <LanguagesIcon className="size-5 stroke-1" />,
-  },
-  {
-    title: "CMS friendly",
-    description: "Built to work with any headless content management system",
-    icon: <SquarePenIcon className="size-5 stroke-1" />,
   },
 ];
 
 export default function Items({
-  title = "Everything you need. Nothing you don't.",
+  title = "Services built to scale your operations.",
   items = DEFAULT_ITEMS,
   className,
 }: ItemsProps) {
   return (
-    <Section className={className}>
-      <div className="max-w-container mx-auto flex flex-col items-center gap-6 sm:gap-20">
-        <h2 className="max-w-[560px] text-center text-3xl leading-tight font-semibold sm:text-5xl sm:leading-tight">
+    <Section id="services" className={className}>
+      <div className="max-w-container mx-auto flex flex-col items-center gap-6 sm:gap-12">
+        <h2 className="max-w-[640px] text-center text-3xl leading-tight font-semibold sm:text-5xl sm:leading-tight">
           {title}
         </h2>
         {items !== false && items.length > 0 && (
-          <div className="grid auto-rows-fr grid-cols-2 gap-0 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+          <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {items.map((item) => (
-              <Item key={item.title}>
-                <ItemTitle className="flex items-center gap-2">
-                  <ItemIcon>{item.icon}</ItemIcon>
+              <Item
+                key={item.title}
+                className="rounded-2xl border border-white/10 bg-card/50 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.04)] backdrop-blur-sm transition-transform duration-200 hover:-translate-y-1"
+              >
+                <ItemTitle className="flex items-center gap-3 text-lg">
+                  <ItemIcon className="rounded-lg border border-white/10 bg-muted/40 p-2 text-foreground">
+                    {item.icon}
+                  </ItemIcon>
                   {item.title}
                 </ItemTitle>
-                <ItemDescription>{item.description}</ItemDescription>
+                <ItemDescription className="mt-2 text-base leading-relaxed text-muted-foreground">
+                  {item.description}
+                </ItemDescription>
               </Item>
             ))}
           </div>
