@@ -7,7 +7,7 @@ import { ReactNode, useCallback } from "react";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
-import LaunchUI from "../../logos/launch-ui";
+// Branding: use agency name text instead of Launch UI logo
 import { Button, buttonVariants } from "../../ui/button";
 import {
   Navbar as NavbarComponent,
@@ -49,9 +49,9 @@ interface NavbarProps {
 }
 
 export default function Navbar({
-  logo = <LaunchUI />,
-  name = "Launch UI",
-  homeUrl = siteConfig.url,
+  logo = null,
+  name = "CosmoWolf Labs",
+  homeUrl = "/",
   mobileLinks = [
     { text: "Services", href: "/#services" },
     { text: "Pricing", href: "/#pricing" },
@@ -60,11 +60,12 @@ export default function Navbar({
   ],
   actions = [
     { text: "Sign In", href: "/signin", isButton: false },
+    { text: "Sign Up", href: "/signup", isButton: true, variant: "default" },
     {
       text: "Start a Project",
-      href: "/#intake",
+      href: "#intake",
       isButton: true,
-      variant: "default",
+      variant: "secondary",
     },
   ],
   showNavigation = true,
@@ -73,6 +74,18 @@ export default function Navbar({
 }: NavbarProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
+
+  const scrollToIntake = (e?: React.MouseEvent, href?: string) => {
+    if (e) e.preventDefault();
+    try {
+      const el = document.querySelector(href || "#intake");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+      else window.location.hash = href || "#intake";
+    } catch (err) {
+      // fallback
+      window.location.href = href || "#intake";
+    }
+  };
 
   const onSignOut = useCallback(async () => {
     try {
@@ -105,29 +118,17 @@ export default function Navbar({
                 Sign Out
               </Button>
             ) : (
-              actions.map((action) =>
-                action.isButton ? (
-                  <Button
-                    key={`${action.href}-${action.text}`}
-                    variant={action.variant || "default"}
-                    asChild
-                  >
-                    <a href={action.href}>
-                      {action.icon}
-                      {action.text}
-                      {action.iconRight}
-                    </a>
-                  </Button>
-                ) : (
-                  <a
-                    key={`${action.href}-${action.text}`}
-                    href={action.href}
-                    className="hidden text-sm md:block"
-                  >
-                    {action.text}
-                  </a>
-                ),
-              )
+              <>
+                <a href="/signin" className="hidden text-sm md:block">
+                  Sign In
+                </a>
+                <Button asChild className="hidden md:inline-block">
+                  <a href="/signup">Sign Up</a>
+                </Button>
+                <Button variant={"default"} asChild className="hidden md:inline-block">
+                  <a href="#intake" onClick={(e) => scrollToIntake(e, "#intake")}>Start a Project</a>
+                </Button>
+              </>
             )}
             <Sheet>
               <SheetTrigger asChild>
@@ -142,22 +143,29 @@ export default function Navbar({
               </SheetTrigger>
               <SheetContent side="right">
                 <SheetTitle className="sr-only">Navigation menu</SheetTitle>
-                <nav className="grid gap-6 text-lg font-medium">
-                  <a
-                    href={homeUrl}
-                    className="flex items-center gap-2 text-xl font-bold"
-                  >
+                <nav className="grid gap-4 text-lg font-medium">
+                  <a href="/" className="flex items-center gap-2 text-xl font-bold">
                     <span>{name}</span>
                   </a>
                   {mobileLinks.map((link) => (
                     <a
                       key={`${link.href}-${link.text}`}
                       href={link.href}
+                      onClick={(e) => link.href === "#intake" && scrollToIntake(e, "#intake")}
                       className="text-muted-foreground hover:text-foreground"
                     >
                       {link.text}
                     </a>
                   ))}
+
+                  <div className="mt-4 border-t border-white/5 pt-4">
+                    <a href="/signin" className="block rounded-lg px-4 py-3 text-center text-sm text-foreground hover:bg-white/5">
+                      Sign In
+                    </a>
+                    <a href="/signup" className="mt-2 block rounded-lg bg-cyan-500 px-4 py-3 text-center text-sm font-medium text-white hover:brightness-105">
+                      Create Account
+                    </a>
+                  </div>
                 </nav>
               </SheetContent>
             </Sheet>

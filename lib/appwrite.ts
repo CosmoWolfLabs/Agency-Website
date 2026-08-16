@@ -1,4 +1,4 @@
-import { Account, Client, Databases, Models } from "appwrite";
+import { Account, Client, Databases, Models, ID } from "appwrite";
 
 let appwriteClient: Client | null = null;
 let appwriteAccount: Account | null = null;
@@ -45,6 +45,59 @@ export const appwriteConfig = {
   getEndpoint: () => process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT ?? "",
   getProjectId: () => process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID ?? "",
 };
+
+/**
+ * OAuth2 Google login helper
+ */
+export async function loginWithGoogle(successUrl?: string, failureUrl?: string) {
+  const account = getAppwriteAccount();
+  if (!account) throw new Error("Appwrite not initialized");
+
+  const origin = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
+  const success = successUrl ?? `${origin}/dashboard`;
+  const failure = failureUrl ?? `${origin}/signin`;
+
+  // Redirects the user to Google's OAuth flow
+  return account.createOAuth2Session("google", success, failure);
+}
+
+/**
+ * Create a phone token/session for SMS OTP flows.
+ * The Appwrite SDK surface differs between versions; use the raw account methods if needed.
+ */
+export async function createPhoneSession(userId: string, phone: string) {
+  const account = getAppwriteAccount();
+  if (!account) throw new Error("Appwrite not initialized");
+
+  // Use ID helper to generate a unique identifier when creating a phone token
+  const id = userId || ID.unique();
+
+  // Some SDKs expose createPhoneToken; call dynamically to avoid types errors
+  // This will request that Appwrite send an OTP to the provided phone number
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const anyAccount: any = account as any;
+  if (typeof anyAccount.createPhoneToken === "function") {
+    return anyAccount.createPhoneToken(id, phone);
+  }
+
+  // Fallback: try createPhoneSession if available
+  if (typeof anyAccount.createPhoneSession === "function") {
+    return anyAccount.createPhoneSession(phone);
+  }
+
+  throw new Error("Phone session creation not supported by Appwrite SDK in this environment");
+}
+
+/**
+ * Verify an OTP / secret for a phone flow by creating a session with the phone ID and secret
+ */
+export async function verifyPhoneOTP(userId: string, secret: string) {
+  const account = getAppwriteAccount();
+  if (!account) throw new Error("Appwrite not initialized");
+
+  // Appwrite allows creating a session by ID + secret for phone-based flows
+  return account.createSession(userId, secret);
+}
 
 /**
  * Register a new user account

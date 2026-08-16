@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { login } from "@/lib/appwrite";
+import { login, loginWithGoogle, createPhoneSession, verifyPhoneOTP } from "@/lib/appwrite";
+import { ID } from "appwrite";
+import { useEffect } from "react";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -11,6 +13,10 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [method, setMethod] = useState<"email" | "phone">("email");
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [phoneUserId, setPhoneUserId] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,14 +33,67 @@ export default function SignInPage() {
     }
   };
 
+  const handleGoogle = async () => {
+    try {
+      await loginWithGoogle();
+    } catch (err) {
+      console.error(err);
+      setError("Google sign-in failed");
+    }
+  };
+
+  const requestPhoneOtp = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const uid = ID.unique();
+      setPhoneUserId(uid);
+      await createPhoneSession(uid, phone);
+    } catch (err: any) {
+      console.error(err);
+      setError(err?.message || "Failed to request OTP");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const verifyOtp = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      if (!phoneUserId) throw new Error("Missing phone session id");
+      await verifyPhoneOTP(phoneUserId, otp);
+      router.push("/dashboard");
+    } catch (err: any) {
+      console.error(err);
+      setError(err?.message || "OTP verification failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/80 p-8 shadow-2xl shadow-slate-950/50">
-        <div className="mb-8 text-center">
+        <div className="mb-4 text-center">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-cyan-400">
             Welcome back
           </p>
           <h1 className="mt-3 text-3xl font-semibold text-white">Sign In</h1>
+        </div>
+        <div className="mb-4 flex items-center gap-2">
+          <button
+            onClick={() => setMethod("email")}
+            className={`rounded-full px-3 py-1 text-sm ${method === "email" ? "bg-white/5" : "text-slate-400"}`}
+          >
+            Email
+          </button>
+          <button
+            onClick={() => setMethod("phone")}
+            className={`rounded-full px-3 py-1 text-sm ${method === "phone" ? "bg-white/5" : "text-slate-400"}`}
+          >
+            Phone / SMS
+          </button>
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -72,28 +131,75 @@ export default function SignInPage() {
               Remember me
             </label>
 
-            <Link href="/forgot-password" className="text-cyan-400 hover:text-cyan-300">
-              Forgot Password?
-            </Link>
+            {method === "email" ? (
+              <Link href="/forgot-password" className="text-cyan-400 hover:text-cyan-300">
+                Forgot Password?
+              </Link>
+            ) : (
+              <span />
+            )}
           </div>
 
           {error && <div className="text-sm text-destructive">{error}</div>}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-3 font-medium text-white transition hover:brightness-110 disabled:opacity-60"
-          >
-            {loading ? "Signing in..." : "Sign In"}
-          </button>
+          {method === "email" ? (
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-3 font-medium text-white transition hover:brightness-110 disabled:opacity-60"
+            >
+              {loading ? "Signing in..." : "Sign In"}
+            </button>
+          ) : (
+            <div className="space-y-3">
+              <div>
+                <label className="mb-2 block text-sm text-slate-300">Phone</label>
+                <input
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+15551234567"
+                  className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-cyan-500"
+                />
+              </div>
+
+              {!phoneUserId ? (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    requestPhoneOtp();
+                  }}
+                  className="w-full rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-3 font-medium text-white"
+                >
+                  {loading ? "Requesting..." : "Send OTP"}
+                </button>
+              ) : (
+                <div className="space-y-2">
+                  <input
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    placeholder="Enter OTP"
+                    className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-cyan-500"
+                  />
+                  <button onClick={(e) => { e.preventDefault(); verifyOtp(); }} className="w-full rounded-xl bg-cyan-500 px-4 py-3 text-white">Verify OTP</button>
+                </div>
+              )}
+            </div>
+          )}
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-400">
-          Don’t have an account?{" "}
-          <Link href="/signup" className="font-medium text-cyan-400 hover:text-cyan-300">
-            Create one
-          </Link>
-        </p>
+        <div className="mt-6 space-y-3 text-center">
+          <button onClick={handleGoogle} className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-sm text-white">
+            <img src="/icons/google.svg" alt="Google" className="h-4 w-4" />
+            Continue with Google
+          </button>
+
+          <p className="text-sm text-slate-400">
+            Don’t have an account?{" "}
+            <Link href="/signup" className="font-medium text-cyan-400 hover:text-cyan-300">
+              Create one
+            </Link>
+          </p>
+        </div>
       </div>
     </main>
   );

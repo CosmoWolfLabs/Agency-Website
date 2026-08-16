@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
-import LaunchUI from "../../logos/launch-ui";
+// Footer replaced with CosmoWolf Labs content
 import {
   Footer,
   FooterBottom,
@@ -33,38 +33,11 @@ interface FooterProps {
 }
 
 export default function FooterSection({
-  logo = <LaunchUI />,
-  name = "Launch UI",
-  columns = [
-    {
-      title: "Product",
-      links: [
-        { text: "Changelog", href: siteConfig.url },
-        { text: "Documentation", href: siteConfig.url },
-      ],
-    },
-    {
-      title: "Company",
-      links: [
-        { text: "About", href: siteConfig.url },
-        { text: "Careers", href: siteConfig.url },
-        { text: "Blog", href: siteConfig.url },
-      ],
-    },
-    {
-      title: "Contact",
-      links: [
-        { text: "Discord", href: siteConfig.url },
-        { text: "Twitter", href: siteConfig.url },
-        { text: "GitHub", href: siteConfig.links.github },
-      ],
-    },
-  ],
-  copyright = "© 2026 Mikołaj Dobrucki. All rights reserved",
-  policies = [
-    { text: "Privacy Policy", href: siteConfig.url },
-    { text: "Terms of Service", href: siteConfig.url },
-  ],
+  logo = null,
+  name = "CosmoWolf Labs",
+  columns = [],
+  copyright = `© ${new Date().getFullYear()} CosmoWolf Labs. All rights reserved.`,
+  policies = [],
   showModeToggle = true,
   className,
 }: FooterProps) {
@@ -74,34 +47,42 @@ export default function FooterSection({
         <Footer>
           <FooterContent>
             <FooterColumn className="col-span-2 sm:col-span-3 md:col-span-1">
-              <div className="flex items-center gap-2">
-                {logo}
+              <div className="flex flex-col gap-2">
                 <h3 className="text-xl font-bold">{name}</h3>
+                <p className="text-sm text-muted-foreground">
+                  Custom Web Applications, Bot Automations & Digital Systems.
+                </p>
+                <a
+                  href="mailto:YOUR_WORK_GMAIL@gmail.com"
+                  className="mt-2 text-sm text-cyan-400 hover:underline"
+                >
+                  Contact: YOUR_WORK_GMAIL@gmail.com
+                </a>
+
+                <a
+                  href="https://discord.gg/YOUR_INVITE_CODE"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 inline-flex w-max items-center gap-2 rounded-md bg-[#5865F2] px-3 py-2 text-sm font-medium text-white"
+                >
+                  Join our Discord
+                </a>
               </div>
             </FooterColumn>
-            {columns.map((column) => (
-              <FooterColumn key={column.title}>
-                <h3 className="text-md pt-1 font-semibold">{column.title}</h3>
-                {column.links.map((link) => (
-                  <a
-                    key={`${link.href}-${link.text}`}
-                    href={link.href}
-                    className="text-muted-foreground text-sm"
-                  >
-                    {link.text}
-                  </a>
-                ))}
-              </FooterColumn>
-            ))}
+
+            <FooterColumn>
+              <h3 className="text-md pt-1 font-semibold">Services</h3>
+              <a href="/#services" className="text-muted-foreground text-sm">
+                Web Applications
+              </a>
+              <a href="/#intake" className="mt-2 block text-muted-foreground text-sm">
+                Start a Project
+              </a>
+            </FooterColumn>
           </FooterContent>
           <FooterBottom>
             <div>{copyright}</div>
             <div className="flex items-center gap-4">
-              {policies.map((policy) => (
-                <a key={`${policy.href}-${policy.text}`} href={policy.href}>
-                  {policy.text}
-                </a>
-              ))}
               {showModeToggle && <ModeToggle />}
             </div>
           </FooterBottom>
