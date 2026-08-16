@@ -51,17 +51,25 @@ export default function FooterSection({
                 <p className="text-sm text-muted-foreground">
                   Custom Web Applications, Bot Automations & Digital Systems.
                 </p>
-                <a
-                  href="mailto:YOUR_WORK_GMAIL@gmail.com"
-                  className="mt-2 text-sm text-cyan-400 hover:underline"
-                >
-                  Contact: YOUR_WORK_GMAIL@gmail.com
-                </a>
+                <div className="mt-3 flex flex-col gap-2">
+                  <a
+                    href="mailto:cosmowolflabs@zohomail.com"
+                    className="text-sm text-zinc-400 hover:text-cyan-400"
+                  >
+                    cosmowolflabs@zohomail.com
+                  </a>
+                  <a
+                    href="mailto:harsh2412pro@gmail.com"
+                    className="text-sm text-zinc-400 hover:text-cyan-400"
+                  >
+                    harsh2412pro@gmail.com
+                  </a>
+                </div>
 
                 <a
                   href="https://discord.gg/YOUR_INVITE_CODE"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="mt-3 inline-flex w-max items-center gap-2 rounded-md bg-[#5865F2] px-3 py-2 text-sm font-medium text-white"
                 >
                   Join our Discord
