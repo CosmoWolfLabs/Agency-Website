@@ -5,7 +5,7 @@ import React from "../../logos/react";
 import ShadcnUi from "../../logos/shadcn-ui";
 import Tailwind from "../../logos/tailwind";
 import TypeScript from "../../logos/typescript";
-import Logo from "../../ui/logo";
+import { LogoItem } from "../../ui/logo-item";
 import { Section } from "../../ui/section";
 
 interface LogosProps {
@@ -19,29 +19,29 @@ export default function Logos({
   title = "Built with industry-standard tools and best practices",
   badge = false,
   logos = [
-    <Logo key="figma" image={Figma} name="Figma" />,
-    <Logo
+    <LogoItem key="figma" image={Figma} name="Figma" />,
+    <LogoItem
       key="react"
       image={React}
       name="React"
       version="19.2.7"
       badge="New"
     />,
-    <Logo
+    <LogoItem
       key="typescript"
       image={TypeScript}
       name="TypeScript"
       version="6.0.3"
       badge="New"
     />,
-    <Logo
+    <LogoItem
       key="shadcn"
       image={ShadcnUi}
       name="Shadcn/ui"
       version="4.11.0"
       badge="New"
     />,
-    <Logo key="tailwind" image={Tailwind} name="Tailwind" version="4.2.1" />,
+    <LogoItem key="tailwind" image={Tailwind} name="Tailwind" version="4.2.1" />,
   ],
   className,
 }: LogosProps) {

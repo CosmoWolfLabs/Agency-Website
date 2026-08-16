@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getAppwriteAccount, getAppwriteDatabase, logout } from "@/lib/appwrite";
+import { getAppwriteAccount, getAppwriteDatabases, logout } from "@/lib/appwrite";
 import { Logo } from "@/components/ui/Logo";
 import { Loader2, Search, Mail, ExternalLink, Activity, LogOut, Check, X } from "lucide-react";
 
@@ -32,6 +32,7 @@ export default function MasterConsole() {
     const init = async () => {
       try {
         const account = getAppwriteAccount();
+        if (!account) throw new Error("Appwrite not initialized");
         const user = await account.get();
         const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'cosmowolflabs@zohomail.com';
         
@@ -41,7 +42,8 @@ export default function MasterConsole() {
           return;
         }
 
-        const db = getAppwriteDatabase();
+        const db = getAppwriteDatabases();
+        if (!db) throw new Error("Appwrite not initialized");
         if (process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID && process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID) {
           const res = await db.listDocuments(
             process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
@@ -97,7 +99,8 @@ export default function MasterConsole() {
   const updateProject = async (id: string, updates: Partial<Project>) => {
     setSavingId(id);
     try {
-      const db = getAppwriteDatabase();
+      const db = getAppwriteDatabases();
+      if (!db) throw new Error("Appwrite not initialized");
       if (process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID && process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID) {
         await db.updateDocument(
           process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
