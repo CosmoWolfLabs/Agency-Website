@@ -86,6 +86,9 @@ export default function Navbar({
     }
   }, [router]);
 
+  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "harsh2412pro@gmail.com";
+  const isAdmin = user && (user.email === adminEmail || (user as any).preferences?.admin === true || user.$id === process.env.NEXT_PUBLIC_ADMIN_ID);
+
   return (
     <header className={cn("sticky top-0 z-50 -mb-4 px-4 pb-4", className)}>
       <div className="fade-bottom bg-background/15 absolute left-0 h-24 w-full backdrop-blur-lg"></div>
@@ -93,11 +96,15 @@ export default function Navbar({
         <NavbarComponent>
           <NavbarLeft>
             <a href={homeUrl} className="flex items-center gap-2 text-xl font-bold">
+              <img src="/logo.svg" alt="CosmoWolf Labs Logo" className="w-6 h-6" />
               <span className="font-bold">{name}</span>
             </a>
             <div className="hidden md:flex items-center gap-4 ml-6">
               <a href="#services" className="text-sm text-muted-foreground hover:text-foreground">Services</a>
               <a href="#workflow" className="text-sm text-muted-foreground hover:text-foreground">How It Works</a>
+              {isAdmin && (
+                <a href="/admin" className="text-sm font-medium text-amber-400 hover:text-amber-300">Admin Panel</a>
+              )}
             </div>
           </NavbarLeft>
           <NavbarRight>
@@ -141,6 +148,11 @@ export default function Navbar({
                       {link.text}
                     </a>
                   ))}
+                  {isAdmin && (
+                    <a href="/admin" className="text-amber-400 hover:text-amber-300">
+                      Admin Panel
+                    </a>
+                  )}
 
                   <div className="mt-4 border-t border-white/5 pt-4">
                     <a href="/signin" className="block rounded-lg px-4 py-3 text-center text-sm text-foreground hover:bg-white/5">

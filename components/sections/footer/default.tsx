@@ -47,7 +47,10 @@ export default function FooterSection({
           <FooterContent>
             <FooterColumn className="col-span-2 sm:col-span-3 md:col-span-1">
               <div className="flex flex-col gap-2">
-                <h3 className="text-xl font-bold">{name}</h3>
+                <div className="flex items-center gap-2 text-xl font-bold">
+                  <img src="/logo.svg" alt="CosmoWolf Labs Logo" className="w-6 h-6" />
+                  <h3 className="text-xl font-bold">{name}</h3>
+                </div>
                 <p className="text-sm text-muted-foreground">
                   Custom Web Applications, Bot Automations & Digital Systems.
                 </p>
@@ -67,10 +70,10 @@ export default function FooterSection({
                 </div>
 
                 <a
-                  href="https://discord.gg/YOUR_INVITE_CODE"
+                  href="https://discord.gg/m3ECw29kf9"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 inline-flex w-max items-center gap-2 rounded-md bg-[#5865F2] px-3 py-2 text-sm font-medium text-white"
+                  className="mt-3 inline-flex w-max items-center gap-2 rounded-md bg-[#5865F2] px-3 py-2 text-sm font-medium text-white hover:brightness-110"
                 >
                   Join our Discord
                 </a>

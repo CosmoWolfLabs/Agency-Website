@@ -9,13 +9,13 @@ import { RootLayoutClient } from "./RootLayoutClient";
 
 export const metadata: Metadata = {
   title: {
-    default: siteConfig.name,
+    default: "CosmoWolf Labs | Custom Web Apps & Automation",
     template: `%s - ${siteConfig.name}`,
   },
   metadataBase: new URL(siteConfig.url),
-  description: siteConfig.description,
+  description: "Full-stack web application development, 24/7 bots, and digital automation systems.",
   keywords: [
-    "Landing page template",
+    "Custom Web Apps",
     "Components",
     "Shadcn",
     "Next.js",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     creator: "@mikolajdobrucki",
   },
   icons: {
-    icon: "/favicon.svg",
+    icon: "/logo.svg",
     apple: "/apple-touch-icon.png",
   },
 };

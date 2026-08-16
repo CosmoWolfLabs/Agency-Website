@@ -125,24 +125,26 @@ export default function DashboardPage() {
           {/* Main content */}
           <div className="flex-1">
             {/* Metric cards row */}
-            <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-xl border border-white/6 bg-slate-900/60 p-4">
-                <div className="text-sm text-muted-foreground">Project Status</div>
-                <div className="mt-2 text-lg font-semibold">{projects.length ? projects[0]?.status || projects[0]?.state || "Unknown" : "—"}</div>
+            {projects.length > 0 && (
+              <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="rounded-xl border border-white/6 bg-slate-900/60 p-4">
+                  <div className="text-sm text-muted-foreground">Project Status</div>
+                  <div className="mt-2 text-lg font-semibold">{projects[0]?.status || projects[0]?.state || "Unknown"}</div>
+                </div>
+                <div className="rounded-xl border border-white/6 bg-slate-900/60 p-4">
+                  <div className="text-sm text-muted-foreground">Active Milestones</div>
+                  <div className="mt-2 text-lg font-semibold">{`${projects[0]?.milestonesCompleted || 0} / ${projects[0]?.milestonesTotal || 4}`}</div>
+                </div>
+                <div className="rounded-xl border border-white/6 bg-slate-900/60 p-4">
+                  <div className="text-sm text-muted-foreground">Live Staging</div>
+                  <div className="mt-2 text-lg font-semibold">{projects[0]?.preview ? <a className="text-cyan-400" href={projects[0].preview} target="_blank" rel="noreferrer">Open Preview</a> : "Awaiting Build"}</div>
+                </div>
+                <div className="rounded-xl border border-white/6 bg-slate-900/60 p-4">
+                  <div className="text-sm text-muted-foreground">Delivery & Payment</div>
+                  <div className="mt-2 text-lg font-semibold">{projects[0]?.paymentStatus || "Pending Approval"}</div>
+                </div>
               </div>
-              <div className="rounded-xl border border-white/6 bg-slate-900/60 p-4">
-                <div className="text-sm text-muted-foreground">Active Milestones</div>
-                <div className="mt-2 text-lg font-semibold">{projects.length ? `${projects[0]?.milestonesCompleted || 0} / ${projects[0]?.milestonesTotal || 4}` : "—"}</div>
-              </div>
-              <div className="rounded-xl border border-white/6 bg-slate-900/60 p-4">
-                <div className="text-sm text-muted-foreground">Live Staging</div>
-                <div className="mt-2 text-lg font-semibold">{projects.length ? (projects[0]?.preview ? <a className="text-cyan-400" href={projects[0].preview} target="_blank" rel="noreferrer">Open Preview</a> : "Awaiting Build") : "—"}</div>
-              </div>
-              <div className="rounded-xl border border-white/6 bg-slate-900/60 p-4">
-                <div className="text-sm text-muted-foreground">Delivery & Payment</div>
-                <div className="mt-2 text-lg font-semibold">{projects.length ? projects[0]?.paymentStatus || "Pending Approval" : "—"}</div>
-              </div>
-            </div>
+            )}
 
             {/* Empty state when no projects */}
             {!projects.length && (
@@ -226,7 +228,7 @@ export default function DashboardPage() {
               {activeTab === "support" && (
                 <>
                   <h3 className="text-lg font-semibold mb-4">Support</h3>
-                  <div className="text-sm text-muted-foreground">Join our Discord or contact support@cosmowolf.example</div>
+                  <div className="text-sm text-muted-foreground">Join our Discord or contact cosmowolflabs@zohomail.com</div>
                 </>
               )}
 

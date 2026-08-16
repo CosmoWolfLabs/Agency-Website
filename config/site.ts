@@ -1,11 +1,11 @@
 export const siteConfig = {
-  name: "Launch UI",
+  name: "CosmoWolf Labs",
   url: "https://launchuicomponents.com",
   getStartedUrl:
     "https://launchuicomponents.com/docs/getting-started/introduction",
   ogImage: "https://launchuicomponents.com/og.jpg",
   description:
-    "Landing page components built with React, Shadcn/ui and Tailwind that will make your website feel premium.",
+    "Custom Web Applications, Bot Automations & Digital Systems.",
   version: "v2.10",
   links: {
     twitter: "https://twitter.com/mikolajdobrucki",

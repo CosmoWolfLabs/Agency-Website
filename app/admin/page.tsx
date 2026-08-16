@@ -17,10 +17,10 @@ export default function AdminPage() {
       if (!account) return router.push('/admin/login');
       try {
         const u = await account.get();
-        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-        if (!u) return router.push('/admin/login');
+        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'harsh2412pro@gmail.com';
+        if (!u) return router.push('/signin');
         // check admin email or preference flag
-        const isAdmin = (adminEmail && u.email === adminEmail) || ((u as any)?.preferences?.admin === true) || (u?.$id && u.$id === process.env.NEXT_PUBLIC_ADMIN_ID);
+        const isAdmin = (u.email === adminEmail) || ((u as any)?.preferences?.admin === true) || (u?.$id && u.$id === process.env.NEXT_PUBLIC_ADMIN_ID);
         if (!isAdmin) return router.push('/dashboard');
         setUser(u);
 
@@ -44,7 +44,7 @@ export default function AdminPage() {
           }
         }
       } catch (err) {
-        return router.push('/admin/login');
+        return router.push('/signin');
       }
     })();
   }, [router]);
