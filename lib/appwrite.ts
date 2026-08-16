@@ -62,12 +62,22 @@ export async function register(
     await account.create("unique()", email, password, name);
 
     // Auto sign in after registration
-    await account.createEmailPasswordSession(email, password);
+    try {
+      await account.createEmailPasswordSession(email, password);
+    } catch (err) {
+      // If session creation fails, continue — user may still be created
+    }
 
     // Get the user
     const user = await account.get();
     return user;
   } catch (error) {
+    // Provide clearer error when backend is unreachable
+    if (error instanceof Error && error.message.includes("Failed to fetch")) {
+      console.error("Registration error: Appwrite endpoint unreachable", error);
+      throw new Error("Appwrite endpoint unreachable. Check NEXT_PUBLIC_APPWRITE_ENDPOINT");
+    }
+
     console.error("Registration error:", error);
     throw error;
   }
@@ -79,18 +89,40 @@ export async function register(
 export async function login(
   email: string,
   password: string
-): Promise<Models.Session> {
+): Promise<Models.User<Models.Preferences> | null> {
   try {
     const account = getAppwriteAccount();
     if (!account) throw new Error("Appwrite not initialized");
 
-    const session = await account.createEmailPasswordSession(
-      email,
-      password
-    );
-    return session;
+    // If a session is already active, `account.get()` will succeed.
+    // In that case, return the user immediately instead of creating a new session.
+    try {
+      const existing = await account.get();
+      if (existing) {
+        return existing as Models.User<Models.Preferences>;
+      }
+    } catch (e) {
+      // Not authenticated — continue to create a session
+    }
+
+    // Best-effort: delete any active session that might block creating a new one.
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      await account.deleteSession("current");
+    } catch (e) {
+      // ignore
+    }
+
+    await account.createEmailPasswordSession(email, password);
+
+    // Return the authenticated user
+    const user = await account.get();
+    return user;
   } catch (error) {
-    console.error("Login error:", error);
+    // Bubble up for caller to display; keep errors unmodified except for network issues
+    if (error instanceof Error && error.message.includes("Failed to fetch")) {
+      throw new Error("Appwrite endpoint unreachable. Check NEXT_PUBLIC_APPWRITE_ENDPOINT");
+    }
     throw error;
   }
 }
@@ -161,6 +193,16 @@ export async function pingAppwrite(): Promise<boolean> {
       console.log("✓ Appwrite connection verified");
       return true;
     } else {
+      // Treat 401 as a valid connection — the backend is reachable but the current
+      // request is not authenticated (guest). This can happen when trying to
+      // fetch account info with no session cookie. Consider the backend reachable.
+      if (response.status === 401) {
+        console.warn(
+          "! Appwrite reachable but request unauthenticated (401). Treating as connected."
+        );
+        return true;
+      }
+
       console.error("✗ Appwrite connection failed: Backend returned", response.status);
       return false;
     }

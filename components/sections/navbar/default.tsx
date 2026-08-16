@@ -1,8 +1,8 @@
 "use client";
 
 import { type VariantProps } from "class-variance-authority";
-import { Menu } from "lucide-react";
-import { ReactNode } from "react";
+import { Menu, LogOut } from "lucide-react";
+import { ReactNode, useCallback } from "react";
 
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
@@ -16,6 +16,12 @@ import {
 } from "../../ui/navbar";
 import Navigation from "../../ui/navigation";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../../ui/sheet";
+import { useAuth } from "@/lib/useAuth";
+import { useRouter } from "next/navigation";
+
+async function handleLogout() {
+  await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+}
 
 interface NavbarLink {
   text: string;
@@ -65,6 +71,18 @@ export default function Navbar({
   customNavigation,
   className,
 }: NavbarProps) {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  const onSignOut = useCallback(async () => {
+    try {
+      await handleLogout();
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+    }
+  }, [router]);
+
   return (
     <header className={cn("sticky top-0 z-50 -mb-4 px-4 pb-4", className)}>
       <div className="fade-bottom bg-background/15 absolute left-0 h-24 w-full backdrop-blur-lg"></div>
@@ -81,28 +99,35 @@ export default function Navbar({
             {showNavigation && (customNavigation || <Navigation />)}
           </NavbarLeft>
           <NavbarRight>
-            {actions.map((action) =>
-              action.isButton ? (
-                <Button
-                  key={`${action.href}-${action.text}`}
-                  variant={action.variant || "default"}
-                  asChild
-                >
-                  <a href={action.href}>
-                    {action.icon}
+            {!loading && user ? (
+              <Button variant="ghost" onClick={onSignOut}>
+                <LogOut className="size-4 mr-2" />
+                Sign Out
+              </Button>
+            ) : (
+              actions.map((action) =>
+                action.isButton ? (
+                  <Button
+                    key={`${action.href}-${action.text}`}
+                    variant={action.variant || "default"}
+                    asChild
+                  >
+                    <a href={action.href}>
+                      {action.icon}
+                      {action.text}
+                      {action.iconRight}
+                    </a>
+                  </Button>
+                ) : (
+                  <a
+                    key={`${action.href}-${action.text}`}
+                    href={action.href}
+                    className="hidden text-sm md:block"
+                  >
                     {action.text}
-                    {action.iconRight}
                   </a>
-                </Button>
-              ) : (
-                <a
-                  key={`${action.href}-${action.text}`}
-                  href={action.href}
-                  className="hidden text-sm md:block"
-                >
-                  {action.text}
-                </a>
-              ),
+                ),
+              )
             )}
             <Sheet>
               <SheetTrigger asChild>

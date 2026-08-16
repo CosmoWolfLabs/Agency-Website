@@ -100,3 +100,30 @@ This repository is licensed under the [MIT License](https://github.com/launch-ui
   <a href="https://launchuicomponents.com/preview">Preview</a>
 </p>
 # launch-ui
+
+## Appwrite authentication
+
+This project includes basic Appwrite authentication helpers and pages.
+
+1. Add the required environment variables (see `.env.example`).
+
+2. Development:
+
+```bash
+cp .env.example .env.local
+# fill in your Appwrite endpoint and project id
+npm run dev
+```
+
+3. Routes added:
+- `POST /api/auth/logout` — deletes the current Appwrite session (server-side proxy)
+- `GET /api/auth/user` — returns the current user when a valid Appwrite session cookie is present
+
+Client pages:
+- `/signin` — email/password sign in
+- `/signup` — create an account and auto-login
+
+Notes:
+- The client uses the Appwrite JS SDK via `lib/appwrite.ts`. Ensure `NEXT_PUBLIC_APPWRITE_ENDPOINT` and `NEXT_PUBLIC_APPWRITE_PROJECT_ID` are set.
+- Server proxy routes forward incoming cookies to Appwrite so server-side session checks are possible.
+
