@@ -6,9 +6,9 @@ import { ReactNode, useCallback } from "react";
 
 import { cn } from "@/lib/utils";
 
-import { Button, buttonVariants } from "../../ui/button";
-import { Navbar as NavbarComponent, NavbarLeft, NavbarRight } from "../../ui/navbar";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../../ui/sheet";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Navbar as NavbarComponent, NavbarLeft, NavbarRight } from "@/components/ui/navbar";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/lib/useAuth";
 import { useRouter } from "next/navigation";
 
@@ -132,7 +132,7 @@ export default function Navbar({
                   <a href="/" className="flex items-center gap-2 text-xl font-bold">
                     <span>{name}</span>
                   </a>
-                  {mobileLinks.map((link) => (
+                  {mobileLinks.map((link: NavbarLink) => (
                     <a
                       key={`${link.href}-${link.text}`}
                       href={link.href}
