@@ -94,35 +94,56 @@ export async function login(
     const account = getAppwriteAccount();
     if (!account) throw new Error("Appwrite not initialized");
 
-    // If a session is already active, `account.get()` will succeed.
-    // In that case, return the user immediately instead of creating a new session.
+    // If a session is already active, `account.get()` will succeed and we can
+    // immediately return the user (no need to create a new session).
     try {
       const existing = await account.get();
       if (existing) {
         return existing as Models.User<Models.Preferences>;
       }
     } catch (e) {
-      // Not authenticated — continue to create a session
+      // Not authenticated / no valid session — continue to create a session
     }
 
     // Best-effort: delete any active session that might block creating a new one.
     try {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
       await account.deleteSession("current");
     } catch (e) {
-      // ignore
+      // ignore deletion errors
     }
 
-    await account.createEmailPasswordSession(email, password);
+    // Try to create a new session. If Appwrite complains that a session is
+    // active, attempt to delete the current session and retry once.
+    try {
+      await account.createEmailPasswordSession(email, password);
+    } catch (err: any) {
+      const msg = err?.message ?? String(err);
+      if (
+        msg.includes("Creation of a session is prohibited") ||
+        msg.includes("session is active") ||
+        msg.includes("prohibited when a session is active")
+      ) {
+        try {
+          await account.deleteSession("current");
+        } catch (e) {
+          // ignore
+        }
+
+        // Retry creating the session once more
+        await account.createEmailPasswordSession(email, password);
+      } else {
+        throw err;
+      }
+    }
 
     // Return the authenticated user
     const user = await account.get();
     return user;
   } catch (error) {
-    // Bubble up for caller to display; keep errors unmodified except for network issues
     if (error instanceof Error && error.message.includes("Failed to fetch")) {
       throw new Error("Appwrite endpoint unreachable. Check NEXT_PUBLIC_APPWRITE_ENDPOINT");
     }
+
     throw error;
   }
 }
