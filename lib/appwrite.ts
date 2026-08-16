@@ -1,4 +1,4 @@
-import { Account, Client, Databases, Models, ID } from "appwrite";
+import { Account, Client, Databases, Models, ID, OAuthProvider } from "appwrite";
 
 let appwriteClient: Client | null = null;
 let appwriteAccount: Account | null = null;
@@ -26,17 +26,17 @@ function initializeAppwrite() {
   return { appwriteClient, appwriteAccount, appwriteDatabases };
 }
 
-export const getAppwriteClient = () => {
+export const getAppwriteClient = (): Client | null => {
   const { appwriteClient: client } = initializeAppwrite();
   return client;
 };
 
-export const getAppwriteAccount = () => {
+export const getAppwriteAccount = (): Account | null => {
   const { appwriteAccount: account } = initializeAppwrite();
   return account;
 };
 
-export const getAppwriteDatabases = () => {
+export const getAppwriteDatabases = (): Databases | null => {
   const { appwriteDatabases: databases } = initializeAppwrite();
   return databases;
 };
@@ -49,7 +49,7 @@ export const appwriteConfig = {
 /**
  * OAuth2 Google login helper
  */
-export async function loginWithGoogle(successUrl?: string, failureUrl?: string) {
+export async function loginWithGoogle(successUrl?: string, failureUrl?: string): Promise<void> {
   const account = getAppwriteAccount();
   if (!account) throw new Error("Appwrite not initialized");
 
@@ -58,14 +58,16 @@ export async function loginWithGoogle(successUrl?: string, failureUrl?: string) 
   const failure = failureUrl ?? `${origin}/signin`;
 
   // Redirects the user to Google's OAuth flow
-  return account.createOAuth2Session("google", success, failure);
+  // Use the OAuthProvider enum for strict typing
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (account.createOAuth2Session as any)(OAuthProvider.Google, success, failure) as Promise<void>;
 }
 
 /**
  * Create a phone token/session for SMS OTP flows.
  * The Appwrite SDK surface differs between versions; use the raw account methods if needed.
  */
-export async function createPhoneSession(userId: string, phone: string) {
+export async function createPhoneSession(userId: string, phone: string): Promise<any> {
   const account = getAppwriteAccount();
   if (!account) throw new Error("Appwrite not initialized");
 
@@ -91,7 +93,7 @@ export async function createPhoneSession(userId: string, phone: string) {
 /**
  * Verify an OTP / secret for a phone flow by creating a session with the phone ID and secret
  */
-export async function verifyPhoneOTP(userId: string, secret: string) {
+export async function verifyPhoneOTP(userId: string, secret: string): Promise<Models.Session | any> {
   const account = getAppwriteAccount();
   if (!account) throw new Error("Appwrite not initialized");
 
