@@ -7,14 +7,8 @@ import { ReactNode, useCallback } from "react";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
-// Branding: use agency name text instead of Launch UI logo
-import { Button, buttonVariants } from "../../ui/button";
-import {
-  Navbar as NavbarComponent,
-  NavbarLeft,
-  NavbarRight,
-} from "../../ui/navbar";
-import Navigation from "../../ui/navigation";
+import { Button } from "../../ui/button";
+import { Navbar as NavbarComponent, NavbarLeft, NavbarRight } from "../../ui/navbar";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../../ui/sheet";
 import { useAuth } from "@/lib/useAuth";
 import { useRouter } from "next/navigation";
@@ -53,10 +47,8 @@ export default function Navbar({
   name = "CosmoWolf Labs",
   homeUrl = "/",
   mobileLinks = [
-    { text: "Services", href: "/#services" },
-    { text: "Pricing", href: "/#pricing" },
-    { text: "FAQ", href: "/#faq" },
-    { text: "Contact", href: "/#intake" },
+    { text: "Services", href: "#services" },
+    { text: "How It Works", href: "#workflow" },
   ],
   actions = [
     { text: "Sign In", href: "/signin", isButton: false },
@@ -68,7 +60,7 @@ export default function Navbar({
       variant: "secondary",
     },
   ],
-  showNavigation = true,
+  showNavigation = false,
   customNavigation,
   className,
 }: NavbarProps) {
@@ -102,33 +94,27 @@ export default function Navbar({
       <div className="max-w-container relative mx-auto">
         <NavbarComponent>
           <NavbarLeft>
-            <a
-              href={homeUrl}
-              className="flex items-center gap-2 text-xl font-bold"
-            >
-              {logo}
-              {name}
+            <a href={homeUrl} className="flex items-center gap-2 text-xl font-bold">
+              <span className="font-bold">{name}</span>
             </a>
-            {showNavigation && (customNavigation || <Navigation />)}
+            <div className="hidden md:flex items-center gap-4 ml-6">
+              <a href="#services" className="text-sm text-muted-foreground hover:text-foreground">Services</a>
+              <a href="#workflow" className="text-sm text-muted-foreground hover:text-foreground">How It Works</a>
+            </div>
           </NavbarLeft>
           <NavbarRight>
             {!loading && user ? (
-              <Button variant="ghost" onClick={onSignOut}>
-                <LogOut className="size-4 mr-2" />
-                Sign Out
-              </Button>
+              <div className="flex items-center gap-2">
+                <span className="hidden md:inline-flex rounded-full bg-slate-800 px-3 py-1 text-sm">{user.email || user.name}</span>
+                <Button variant="ghost" onClick={onSignOut}>Sign Out</Button>
+              </div>
             ) : (
-              <>
-                <a href="/signin" className="hidden text-sm md:block">
-                  Sign In
-                </a>
+              <div className="flex items-center gap-3">
+                <a href="/signin" className="text-sm hidden md:inline-block">Sign In</a>
                 <Button asChild className="hidden md:inline-block">
-                  <a href="/signup">Sign Up</a>
+                  <a href="/signup">Get Started</a>
                 </Button>
-                <Button variant={"default"} asChild className="hidden md:inline-block">
-                  <a href="#intake" onClick={(e) => scrollToIntake(e, "#intake")}>Start a Project</a>
-                </Button>
-              </>
+              </div>
             )}
             <Sheet>
               <SheetTrigger asChild>
