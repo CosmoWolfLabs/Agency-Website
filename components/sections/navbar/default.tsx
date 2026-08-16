@@ -1,13 +1,12 @@
 "use client";
 
 import { type VariantProps } from "class-variance-authority";
-import { Menu, LogOut } from "lucide-react";
+import { Menu } from "lucide-react";
 import { ReactNode, useCallback } from "react";
 
-import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
-import { Button } from "../../ui/button";
+import { Button, buttonVariants } from "../../ui/button";
 import { Navbar as NavbarComponent, NavbarLeft, NavbarRight } from "../../ui/navbar";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../../ui/sheet";
 import { useAuth } from "@/lib/useAuth";
