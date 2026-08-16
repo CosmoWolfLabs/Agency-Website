@@ -1,4 +1,4 @@
-import { Account, Client, Databases, Models, ID, OAuthProvider } from "appwrite";
+import { Account, Client, Databases, ID, Models, OAuthProvider } from "appwrite";
 
 let appwriteClient: Client | null = null;
 let appwriteAccount: Account | null = null;
@@ -59,7 +59,7 @@ export async function loginWithGoogle(successUrl?: string, failureUrl?: string):
 
   // Redirects the user to Google's OAuth flow
   // Use the OAuthProvider enum for strict typing
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   return (account.createOAuth2Session as any)(OAuthProvider.Google, success, failure) as Promise<void>;
 }
 
@@ -76,7 +76,7 @@ export async function createPhoneSession(userId: string, phone: string): Promise
 
   // Some SDKs expose createPhoneToken; call dynamically to avoid types errors
   // This will request that Appwrite send an OTP to the provided phone number
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const anyAccount: any = account as any;
   if (typeof anyAccount.createPhoneToken === "function") {
     return anyAccount.createPhoneToken(id, phone);

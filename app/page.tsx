@@ -1,14 +1,9 @@
-import IntakeSection from "../components/IntakeSection";
-import CTA from "../components/sections/cta/default";
-import FAQ from "../components/sections/faq/default";
 import Footer from "../components/sections/footer/default";
 import Hero from "../components/sections/hero/default";
 import Items from "../components/sections/items/default";
-import Logos from "../components/sections/logos/default";
 import Navbar from "../components/sections/navbar/default";
-import Pricing from "../components/sections/pricing/default";
-import Stats from "../components/sections/stats/default";
 import { LayoutLines } from "../components/ui/layout-lines";
+import WorkflowSection from "../components/WorkflowSection";
 
 export default function Home() {
   return (
@@ -16,13 +11,8 @@ export default function Home() {
       <LayoutLines />
       <Navbar />
       <Hero />
-      <Logos />
       <Items />
-      <Stats />
-      <Pricing />
-      <FAQ />
-      <CTA />
-      <IntakeSection />
+      <WorkflowSection />
       <Footer />
     </main>
   );

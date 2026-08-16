@@ -2,15 +2,14 @@
 
 import { type VariantProps } from "class-variance-authority";
 import { Menu } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { ReactNode, useCallback } from "react";
-
-import { cn } from "@/lib/utils";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Navbar as NavbarComponent, NavbarLeft, NavbarRight } from "@/components/ui/navbar";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/lib/useAuth";
-import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 async function handleLogout() {
   await fetch("/api/auth/logout", { method: "POST", credentials: "include" });

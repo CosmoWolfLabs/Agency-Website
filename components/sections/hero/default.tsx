@@ -23,13 +23,13 @@ interface HeroProps {
 
 const DEFAULT_HERO_BUTTONS: HeroButtonProps[] = [
   {
-    href: "#intake",
-    text: "Start a Project",
+    href: "/signup",
+    text: "Get Started",
     variant: "default",
   },
   {
-    href: "#services",
-    text: "View Services",
+    href: "/signin",
+    text: "Sign In",
     variant: "glow",
   },
 ];
@@ -56,7 +56,7 @@ export default function Hero({
 }: HeroProps) {
   return (
     <Section
-      id="intake"
+      id="hero"
       className={cn(
         "fade-bottom overflow-hidden pb-0 sm:pb-0 md:pb-0",
         className,

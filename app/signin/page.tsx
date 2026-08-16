@@ -1,11 +1,11 @@
 "use client";
 
+import { ID } from "appwrite";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { login, loginWithGoogle, createPhoneSession, verifyPhoneOTP } from "@/lib/appwrite";
-import { ID } from "appwrite";
-import { useEffect } from "react";
+
+import { createPhoneSession, login, loginWithGoogle, verifyPhoneOTP } from "@/lib/appwrite";
 
 export default function SignInPage() {
   const router = useRouter();
